@@ -10,8 +10,10 @@ exports.getItemById = (req, res, next) => {
     const item = items.find(i => i.id === id);
 
     if (!item) {
-        // return next(new Error("Item not found"));
-        return res.status(404).json({});
+        const error = new Error("Предмет не найден");
+        error.status = 404;
+        error.success = false;
+        return next(error);
     }
 
     return res.json(item);
@@ -21,8 +23,10 @@ exports.createItem = (req, res, next) => {
     const { title, author, price } = req.body;
 
     if (!title || !author || price < 0) {
-        // return next(new Error("Invalid data"));
-        return res.status(409).json({});
+        const error = new Error("Некорректно заполнены поля");
+        error.status = 400;
+        error.success = false;
+        return next(error);
     }
 
     const newItem = {
